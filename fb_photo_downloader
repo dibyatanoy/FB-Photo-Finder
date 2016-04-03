@@ -22,7 +22,7 @@ def downloadPhotos(photos, directory):
 
 
 
-def display_data(photos, srch_name):
+def display_data(photos, srch_names):
 
     photo_cnt = 1
 
@@ -31,13 +31,22 @@ def display_data(photos, srch_name):
     for photo in photos:
 
         tags = photo["tags"]["data"]
+        is_needed = False
 
         for tag in tags:
-            if srch_name in tag["name"]:
-                print photo_cnt, ") created at: ", photo["created_time"], "link: ", photo["images"][0]["source"]
 
-                req_photos.append(photo)
-                photo_cnt = photo_cnt + 1
+            for srch_name in srch_names:
+                if srch_name in tag["name"]:
+                    print photo_cnt, ") created at: ", photo["created_time"], "link: ", photo["images"][0]["source"]
+
+                    req_photos.append(photo)
+                    photo_cnt = photo_cnt + 1
+
+                    is_needed = True
+                    break;
+
+
+            if is_needed:
                 break;
 
 
@@ -85,9 +94,9 @@ def getPhotoData():
             break;
 
 
-    name = raw_input('Enter name of person to search (please be careful with the spelling): ')
+    name_list = raw_input('Enter names of people to search (please be careful with the spelling), separated by spaces: ').split()
 
-    display_data(photos, name)
+    display_data(photos, name_list)
 
 
 
