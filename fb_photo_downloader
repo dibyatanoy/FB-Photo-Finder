@@ -1,0 +1,94 @@
+import facebook
+import requests
+import easygui as eg
+from httplib import *
+from urllib import *
+
+def downloadPhotos(photos, directory):
+
+    for photo in photos:
+
+        url = photo["images"][0]["source"]
+
+
+        name = directory + "/" + photo["id"] + ".jpg";
+
+        image = URLopener()
+        image.retrieve(url, name)
+
+
+
+    print "Download complete!"
+
+
+
+def display_data(photos, srch_name):
+
+    photo_cnt = 1
+
+    req_photos = []
+
+    for photo in photos:
+
+        tags = photo["tags"]["data"]
+
+        for tag in tags:
+            if srch_name in tag["name"]:
+                print photo_cnt, ") created at: ", photo["created_time"], "link: ", photo["images"][0]["source"]
+
+                req_photos.append(photo)
+                photo_cnt = photo_cnt + 1
+                break;
+
+
+
+    response = raw_input("Found the photos listed above. Do you wish to download them all (Y/N)?: ")
+
+    while response != "Y" and response != "N":
+        response = raw_input("Found the photos listed above. Do you wish to download them all (Y/N)?: ")
+
+    if response == "Y":
+        directory = getSaveDir()
+
+        downloadPhotos(req_photos, directory)
+
+
+def getSaveDir():
+
+    directory = eg.diropenbox("Select the directory to save in")
+    print directory
+
+    return directory
+
+
+def getPhotoData():
+
+    token = ""
+    graph = facebook.GraphAPI(token)
+
+    photos = [];
+    photo_page = graph.get_connections("me","photos")
+
+    #display_data(photo_page["data"])
+
+    while(True):
+        try:
+
+            for photo in photo_page["data"]:
+
+                photos.append(photo)
+
+            photo_page = requests.get(photo_page["paging"]["next"]).json()
+
+        except KeyError:
+
+            break;
+
+
+    name = raw_input('Enter name of person to search (please be careful with the spelling): ')
+
+    display_data(photos, name)
+
+
+
+getPhotoData()
