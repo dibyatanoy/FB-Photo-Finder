@@ -1,4 +1,4 @@
-Download the photos you need in a few simple steps! Based on Python 3.
+Download the photos you need in a few simple steps! Based on Python 3; uses EasyGui for selecting directories.
 
 FB Photo Finder takes as input a list of user names and shows you a listing of all of your photos in which the user(s) is/are tagged. If you wish, you can proceed to download all of these to a directory of your choice.
 
